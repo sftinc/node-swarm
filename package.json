@@ -1,0 +1,42 @@
+{
+	"name": "node-swarm",
+	"version": "0.1.0",
+	"description": "A Node.js library for building AI agent swarms using OpenAI",
+	"license": "MIT",
+	"author": "sftinc",
+	"type": "module",
+	"main": "./swarm/index.js",
+	"exports": {
+		".": "./swarm/index.js"
+	},
+	"files": [
+		"swarm",
+		"types",
+		"README.md"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sftinc/node-swarm.git"
+	},
+	"keywords": [
+		"ai",
+		"openai",
+		"agents",
+		"swarm",
+		"llm"
+	],
+	"bugs": {
+		"url": "https://github.com/sftinc/node-swarm/issues"
+	},
+	"homepage": "https://github.com/sftinc/node-swarm#readme",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"dotenv": "^16.4.7",
+		"openai": "^4.85.4"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	}
+}
