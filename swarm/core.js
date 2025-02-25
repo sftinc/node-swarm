@@ -8,6 +8,8 @@ class Swarm {
 
 		this.dataParam = dataParam || '_data'
 		this.client = new OpenAI({ ...settings })
+
+		console.log('Swarm', this.dataParam)
 	}
 
 	async getChatCompletion(agent, history, data, modelOverride, stream, debug) {
@@ -16,7 +18,6 @@ class Swarm {
 		const messages = [{ role: 'system', content: instructions }, ...history]
 
 		const tools = agent.tools.map((tool) => {
-			console.log('tool', tool)
 			const processedTool = JSON.parse(JSON.stringify(tool))
 			delete processedTool.function
 			delete processedTool[this.dataParam]
@@ -44,7 +45,7 @@ class Swarm {
 	handleToolResult(toolName, result, debug) {
 		if (result == null) {
 			debugPrint(debug, `🟥 Null result from tool "${toolName}"`)
-			return new Result({ value: `Error: No result returned from tool "${toolName}"` })
+			return new Result({ note: `Error: No result returned from tool "${toolName}"` })
 		}
 
 		debugPrint(debug, `🟦 Process Tool Result for tool "${toolName}"`)
@@ -52,14 +53,14 @@ class Swarm {
 		if (result instanceof Result) return result
 		if (result instanceof Agent) {
 			return new Result({
-				value: JSON.stringify({ assistant: result.name }),
+				note: JSON.stringify({ assistant: result.name }),
 				agent: result,
 			})
 		}
 
 		const stringValue = typeof result === 'object' ? JSON.stringify(result) : String(result)
 
-		return new Result({ value: stringValue })
+		return new Result({ note: stringValue })
 	}
 
 	async handleToolCalls(toolCalls, agent, data, debug) {
@@ -84,7 +85,7 @@ class Swarm {
 
 				const toolParams = Object.keys(toolMap[name].parameters.properties || {})
 				const toolRequiredParams = toolMap[name].parameters.required
-				const toolMissingArgs = toolRequiredParams.filter((param) => !(param in toolCallArgs) && param !== this.variable)
+				const toolMissingArgs = toolRequiredParams.filter((param) => !(param in toolCallArgs) && param !== this.dataParam)
 
 				if (toolMissingArgs.length) {
 					throw new Error(`processToolCall - Missing required parameters in tool "${name}" [${toolMissingArgs.join(', ')}]`)
@@ -105,7 +106,7 @@ class Swarm {
 						role: 'tool',
 						tool_call_id: toolCall.id,
 						tool_name: name,
-						content: result.value,
+						content: result.note,
 					},
 					result,
 				}
@@ -154,11 +155,13 @@ class Swarm {
 
 		while (history.length - initLen < maxTurns && activeAgent) {
 			const completion = await this.getChatCompletion(activeAgent, history, data, modelOverride, stream, debug)
+
 			const message = completion.choices[0].message
 			message.sender = activeAgent.name
 			history.push(message)
 
 			if (!message.tool_calls || !executeTools) break
+
 			const partialResponse = await this.handleToolCalls(message.tool_calls, activeAgent, data, debug)
 			history.push(...partialResponse.messages)
 			Object.assign(data, partialResponse.data)

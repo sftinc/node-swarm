@@ -9,9 +9,7 @@ class Agent {
 		}
 
 		const processedTools = tools.map((tool) => {
-			if (tool instanceof Tool) {
-				return tool
-			}
+			if (tool instanceof Tool) return tool
 			return new Tool({ function: tool })
 		})
 
@@ -43,8 +41,6 @@ class Tool {
 		this.description = description || `This tool is used to ${func?.name}`
 		this.function = func
 		this.parameters = parameters
-
-		console.log('Tool', this)
 	}
 }
 
@@ -57,8 +53,8 @@ class Response {
 }
 
 class Result {
-	constructor({ value = '', data = {}, agent = null } = {}) {
-		this.value = value
+	constructor({ note = '', data = {}, agent = null } = {}) {
+		this.note = note
 		this.data = data
 		this.agent = agent
 	}

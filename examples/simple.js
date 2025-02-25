@@ -7,26 +7,21 @@ dotenv.config()
 // Initialize Swarm
 const swarm = new Swarm()
 
-/* 
-Function to transfer to Spanish agent
+// Function to transfer to Spanish agent (very descriptive name)
+// NOTE: This function will be converted to a Tool at runtime, and only have the function name provided to the LLM
+const useToSpeakSpanish = () => agentSpanish
 
-NOTE: This function will be converted to a Tool 
-at runtime, and only have the function name provided 
-to the LLM 
-*/
-const toSpeakSpanish = () => agentSpanish
-
-// Agent that only speaks English
+// Agent that only speaks English and has a tool to transfer to Spanish agent
 const agentEnglish = new Agent({
 	name: 'English Speaking Agent',
 	instructions: 'You are a helpful assistant that only speaks English.',
-	tools: [toSpeakSpanish],
+	tools: [useToSpeakSpanish],
 })
 
 // Agent that only speaks Spanish
 const agentSpanish = new Agent({
 	name: 'Spanish Speaking Agent',
-	instructions: 'You are a helpful assistant that only speaks Spanish. Use a ton of emojis to make the conversation more fun.',
+	instructions: 'You are a helpful assistant that only speaks Spanish. Use emojis to make the conversation more fun.',
 })
 
 // User message
