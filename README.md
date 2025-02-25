@@ -1,6 +1,6 @@
 # node-swarm
 
-A Node.js library for building AI agents. Create autonomous agents that can communicate with each other, use tools, and share/modify data.
+A Node.js library for building AI agents using OpenAI Swarm framework. Create autonomous agents that can communicate with each other, use tools, and share/modify data.
 
 ## Table of Contents
 
@@ -11,7 +11,7 @@ A Node.js library for building AI agents. Create autonomous agents that can comm
 -   [Swarm.run()](#swarmrun)
 -   [Agent Class](#agent-class)
 -   [Tool Class](#tool-class)
--   [Using Data & Results](#using-data--results)
+-   [Using Data](#using-data)
 -   [Examples](#examples)
     -   [Simple Agent Transfer](#1-simple-agent-transfer-npm-run-simple)
     -   [Tool Definition](#2-tool-definition-npm-run-tool)
@@ -20,19 +20,39 @@ A Node.js library for building AI agents. Create autonomous agents that can comm
 
 ## Installation
 
+### Option 1: Install from npm
+
+```bash
+npm install @sftinc/node-swarm
 ```
-1. git clone https://github.com/seefusion/node-swarm.git
+
+Create a `.env` file with your OpenAI API key:
+
+```bash
+OPENAI_API_KEY=your-api-key-here
+```
+
+Import the library:
+
+```javascript
+import { Swarm, Agent, Tool, Data } from '@sftinc/node-swarm'
+```
+
+### Option 2: Clone Repository
+
+```bash
+1. git clone https://github.com/sftinc/node-swarm.git
 2. cd node-swarm
 3. npm install
 4. cp .env.example .env
-5. Edit .env with your LLM API key
-6. npm start (runs ./examples/1-simple.js)
+5. Edit .env with your OpenAI API key
+6. npm start (runs ./examples/simple.js)
 ```
 
 ## Quick Start
 
 ```javascript
-import { Swarm, Agent } from 'node-swarm'
+import { Swarm, Agent, Tool, Data } from 'node-swarm'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -134,6 +154,8 @@ const tool = new Tool({
 
 Data can be passed and modified throughout the conversation. The data is passed to a function or Agent instruction via the dataParam (defaults to \_data - [see Swarm Client](#swarm-client)) :
 
+> **Important**: Agent instructions only have access to data passed via `Swarm.run(agent, messages, data <--)`. Instructions cannot access any other external data or functions.
+
 ```javascript
 // Function that gets the temperature
 const getTemperature = (_data) => {
@@ -142,9 +164,9 @@ const getTemperature = (_data) => {
 
 // Function that updates the temperature
 const updateTemperature = (temp) => {
-	return new Result({
+	return new Data({
 		note: 'Temperature updated', // Optional: note detailing the tool's action
-		data: { temperature: temp }, // Updates data context
+		data: { temperature: temp }, // Updates data object
 	})
 }
 
@@ -199,7 +221,7 @@ Demonstrates how to create tools with parameter validation. Uses a weather API e
 npm run data
 ```
 
-Shows how to use shared data context between agents and tools. Demonstrates updating user information and accessing data in agent instructions. Teaches data management, Result class usage, and dynamic instructions.
+Shows how to use shared data context between agents and tools. Demonstrates updating user information and accessing data in agent instructions. Teaches data management, Data class usage, and dynamic instructions.
 
 Each example builds on the previous one, introducing new concepts while maintaining the core agent-swarm functionality.
 

@@ -1,6 +1,6 @@
 // Using Swarm data object to be used by functions and instructions
 
-import { Swarm, Agent, Tool, Result } from 'node-swarm'
+import { Swarm, Agent, Tool, Data } from 'node-swarm'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -15,7 +15,7 @@ const updateUser = (name, age, _data) => {
 	user.age = age || user.age
 
 	// Make sure to return the key and all data for that key
-	return new Result({
+	return new Data({
 		note: `User Updated: ${JSON.stringify(user)}`,
 		data: { user },
 	})

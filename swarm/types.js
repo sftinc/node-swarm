@@ -60,6 +60,15 @@ class Result {
 	}
 }
 
+class Data {
+	constructor(note = '', data = {}) {
+		return new Result({
+			note,
+			data,
+		})
+	}
+}
+
 // class StreamMessageToolCall {
 // 	constructor({ id, function: func, type }) {
 // 		this.id = id
@@ -75,4 +84,4 @@ class Result {
 // 	}
 // }
 
-export { Agent, Tool, Response, Result }
+export { Agent, Tool, Response, Result, Data }
