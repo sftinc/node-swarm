@@ -2,6 +2,22 @@
 
 A Node.js library for building AI agents. Create autonomous agents that can communicate with each other, use tools, and share/modify data.
 
+## Table of Contents
+
+-   [Installation](#installation)
+-   [Quick Start](#quick-start)
+-   [API Reference](#api-reference)
+-   [Swarm Client](#swarm-client)
+-   [Swarm.run()](#swarmrun)
+-   [Agent Class](#agent-class)
+-   [Tool Class](#tool-class)
+-   [Using Data & Results](#using-data--results)
+-   [Examples](#examples)
+    -   [Simple Agent Transfer](#1-simple-agent-transfer-npm-run-simple)
+    -   [Tool Definition](#2-tool-definition-npm-run-tool)
+    -   [Parameter Validation](#3-parameter-validation-npm-run-params)
+    -   [Data Context](#4-data-context-npm-run-data)
+
 ## Installation
 
 ```
@@ -62,10 +78,10 @@ The Swarm client accepts OpenAI configuration options:
 
 ```javascript
 const swarm = new Swarm({
-apiKey: string, // LLM API key
-baseURL?: string, // LLM API URL
-...LLMOptions // Any other LLM client options
-dataParam?: string, // Custom data parameter name for Swarm (default: '\_data')
+	apiKey: string, // LLM API key
+	baseURL?: string, // LLM API URL
+	...LLMOptions // Any other LLM client options
+	dataParam?: string, // Custom data parameter name for Swarm (default: '\_data')
 })
 ```
 
@@ -92,12 +108,12 @@ Create an AI agent:
 
 ```javascript
 const agent = new Agent({
-name: string, // Agent name
-instructions: string | Function, // System instructions
-tools?: Tool[] | Function[], // Available tools
-model?: string, // OpenAI model
-toolChoice?: 'auto' | 'none', // Tool selection mode
-parallelToolCalls?: boolean // Run tools in parallel
+	name: string, // Agent name
+	instructions: string | Function, // System instructions
+	tools?: Tool[] | Function[], // Available tools
+	model?: string, // OpenAI model
+	toolChoice?: 'auto' | 'none', // Tool selection mode
+	parallelToolCalls?: boolean // Run tools in parallel
 })
 ```
 
@@ -107,16 +123,16 @@ Create a tool for agents to use:
 
 ```javascript
 const tool = new Tool({
-title?: string, // Tool title
-description?: string, // Tool description
-function: Function, // Tool implementation
-parameters?: Object // JSON Schema parameters
+	title?: string, // Tool title
+	description?: string, // Tool description
+	function: Function, // Tool implementation
+	parameters?: Object // JSON Schema parameters
 })
 ```
 
 ### Using Data in Functions and Instructions
 
-Data can be passed and modified throughout the conversation:
+Data can be passed and modified throughout the conversation. The data is passed to a function or Agent instruction via the dataParam (defaults to \_data):
 
 ```javascript
 // Function that gets the temperature
@@ -153,32 +169,36 @@ console.log(response.data) // Access updated data
 
 Run examples using npm:
 
-### 1. Simple Agent Transfer (\`npm run simple\`)
+### 1. Simple Agent Transfer
 
-\```
+```
 npm run simple
-\```
+```
+
 Demonstrates basic agent-to-agent communication. Shows how an English-speaking agent can transfer to a Spanish-speaking agent when needed. Teaches the basics of creating agents and automatic tool conversion from functions.
 
-### 2. Tool Definition (\`npm run tool\`)
+### 2. Tool Definition
 
-\```
+```
 npm run tool
-\```
+```
+
 Shows explicit tool creation using the Tool class. Similar to the simple example but demonstrates how to add metadata (title, description) to tools for better LLM understanding. Teaches proper tool definition and configuration.
 
-### 3. Parameter Validation (\`npm run params\`)
+### 3. Parameter Validation
 
-\```
+```
 npm run params
-\```
+```
+
 Demonstrates how to create tools with parameter validation. Uses a weather API example to show how to define required parameters, enums, and parameter descriptions. Teaches input validation and parameter configuration for tools.
 
-### 4. Data Context (\`npm run data\`)
+### 4. Data Context
 
-\```
+```
 npm run data
-\```
+```
+
 Shows how to use shared data context between agents and tools. Demonstrates updating user information and accessing data in agent instructions. Teaches data management, Result class usage, and dynamic instructions.
 
 Each example builds on the previous one, introducing new concepts while maintaining the core agent-swarm functionality.
