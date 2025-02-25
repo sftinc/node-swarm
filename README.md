@@ -132,7 +132,7 @@ const tool = new Tool({
 
 ### Using Data in Functions and Instructions
 
-Data can be passed and modified throughout the conversation. The data is passed to a function or Agent instruction via the dataParam (defaults to \_data):
+Data can be passed and modified throughout the conversation. The data is passed to a function or Agent instruction via the dataParam (defaults to \_data - [see Swarm Client](#swarm-client)) :
 
 ```javascript
 // Function that gets the temperature
