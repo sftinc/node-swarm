@@ -62,10 +62,7 @@ class Result {
 
 class Data {
 	constructor(note = '', data = {}) {
-		return new Result({
-			note,
-			data,
-		})
+		return new Result(note, data)
 	}
 }
 

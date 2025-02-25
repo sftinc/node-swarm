@@ -34,4 +34,4 @@ const messages = [
 
 // Run Swarm with the English agent and the user message
 const response = await swarm.run(agentEnglish, messages)
-console.log(response)
+console.dir(response, { depth: null, colors: true })

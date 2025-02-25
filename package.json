@@ -1,6 +1,6 @@
 {
 	"name": "node-swarm",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "A Node.js library for building AI agents using a OpenAI's Swarm framework.",
 	"license": "MIT",
 	"author": "sftinc",
@@ -32,7 +32,7 @@
 	"scripts": {
 		"start": "node ./examples/simple.js",
 		"simple": "node ./examples/simple.js",
-		"tools": "node ./examples/tools.js",
+		"tool": "node ./examples/tool.js",
 		"params": "node ./examples/params.js",
 		"data": "node ./examples/data.js"
 	},

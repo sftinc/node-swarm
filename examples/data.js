@@ -14,6 +14,14 @@ const updateUser = (name, age, _data) => {
 	user.name = name || user.name
 	user.age = age || user.age
 
+	console.log(
+		'updateUser',
+		new Data({
+			note: `User Updated: ${JSON.stringify(user)}`,
+			data: { user },
+		})
+	)
+
 	// Make sure to return the key and all data for that key
 	return new Data({
 		note: `User Updated: ${JSON.stringify(user)}`,
@@ -70,4 +78,4 @@ const data = {
 
 // Run Swarm with the orchestrator agent and the user message
 const response = await swarm.run(orchestrator, messages, data)
-console.log(response)
+console.dir(response, { depth: null, colors: true })

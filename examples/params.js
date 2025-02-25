@@ -52,4 +52,4 @@ const messages = [
 
 // Run Swarm with the orchestrator agent and the user message
 const response = await swarm.run(orchestrator, messages)
-console.log(response)
+console.dir(response, { depth: null, colors: true })
