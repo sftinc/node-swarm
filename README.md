@@ -49,6 +49,12 @@ import { Swarm, Agent, Tool, Data } from '@sftinc/node-swarm'
 6. npm start (runs ./examples/simple.js)
 ```
 
+Import the library:
+
+```javascript
+import { Swarm, Agent, Tool, Data } from 'node-swarm'
+```
+
 ## Quick Start
 
 ```javascript
