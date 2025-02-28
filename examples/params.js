@@ -1,6 +1,6 @@
 // Using a Tool to define input parameters for the function
 
-import { Swarm, Agent, Tool } from 'node-swarm'
+import { Swarm, Agent, Tool } from '@sftinc/node-swarm'
 import dotenv from 'dotenv'
 dotenv.config()
 

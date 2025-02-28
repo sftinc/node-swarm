@@ -1,6 +1,6 @@
 // Using Swarm data object to be used by functions and instructions
 
-import { Swarm, Agent, Tool, Data } from 'node-swarm'
+import { Swarm, Agent, Tool, Data } from '@sftinc/node-swarm'
 import dotenv from 'dotenv'
 dotenv.config()
 

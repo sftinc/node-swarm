@@ -1,6 +1,6 @@
 // A simple example of Swarm with two agents
 
-import { Swarm, Agent, Data } from 'node-swarm'
+import { Swarm, Agent, Data } from '@sftinc/node-swarm'
 import dotenv from 'dotenv'
 dotenv.config()
 

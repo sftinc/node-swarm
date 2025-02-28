@@ -51,13 +51,13 @@ import { Swarm, Agent, Tool, Data } from '@sftinc/node-swarm'
 Import the library:
 
 ```javascript
-import { Swarm, Agent, Tool, Data } from 'node-swarm'
+import { Swarm, Agent, Tool, Data } from '@sftinc/node-swarm'
 ```
 
 ## Quick Start
 
 ```javascript
-import { Swarm, Agent, Tool, Data } from 'node-swarm'
+import { Swarm, Agent, Tool, Data } from '@sftinc/node-swarm'
 import dotenv from 'dotenv'
 dotenv.config()
 
