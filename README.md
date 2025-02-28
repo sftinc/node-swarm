@@ -134,7 +134,7 @@ Create a tool for agents to use:
 ```javascript
 const tool = new Tool({
 	title: string, // Tool title
-	description: string, // Optional: Description of what the tool does
+	description: string, // Description of what the tool does
 	function: Function, // A function to call when a tool is used
 	(parameters): Object // Optional: JSON Schema parameters
 })
