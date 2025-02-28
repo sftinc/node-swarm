@@ -1,4 +1,2 @@
-import Swarm from './core.js'
-import { Agent, Tool, Data } from './types.js'
-
-export { Swarm, Agent, Tool, Data }
+import { Agent, Tool, Data, Swarm } from './core.js'
+export { Agent, Tool, Data, Swarm }

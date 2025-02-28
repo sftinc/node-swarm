@@ -1,44 +1,28 @@
-import { functionToJson } from './utils.js'
-
-class Agent {
-	constructor({ name, instructions, tools = [], toolChoice = 'auto', parallelToolCalls = false, model = 'gpt-4o' } = {}) {
-		console.log('Agent constructor', { name, instructions, tools, toolChoice, parallelToolCalls, model })
-
-		if (!Array.isArray(tools)) {
-			throw new TypeError('Agent tools must be an array')
-		}
-
-		const processedTools = tools.map((tool) => {
-			if (tool instanceof Tool) return tool
-			return new Tool({ function: tool })
-		})
-
-		this.name = name || 'Agent (add agent name)'
-		this.instructions = instructions || 'You are a helpful agent.'
-		this.tools = processedTools
+class BaseAgent {
+	constructor({
+		name = '',
+		instructions = '',
+		prompt = '',
+		tools = [],
+		toolChoice = 'auto',
+		parallelToolCalls = false,
+		model = null,
+	} = {}) {
+		this.name = name
+		this.instructions = instructions
+		this.prompt = prompt
+		this.tools = tools
 		this.toolChoice = toolChoice
 		this.parallelToolCalls = parallelToolCalls
 		this.model = model
 	}
 }
 
-class Tool {
-	constructor({ title, description, function: func, parameters: params = {} } = {}) {
-		if (!func || typeof func !== 'function') {
-			throw new Error('A tool function is required and must be a function')
-		}
-
-		const schema = func ? functionToJson(func) : {}
-		const parameters = schema?.parameters || {}
-
-		for (const key in parameters?.properties) {
-			parameters.properties[key] = params[key] ? { ...parameters.properties[key], ...params[key] } : parameters.properties[key]
-			if (parameters.properties[key]?.optional) parameters.required = parameters.required.filter((param) => param !== key)
-		}
-
-		this.name = func?.name
-		this.title = title || func?.name
-		this.description = description || `This tool is used to ${func?.name}`
+class BaseTool {
+	constructor({ title = '', description = '', function: func = null, parameters = {} } = {}) {
+		this.name = func?.name || null
+		this.title = title
+		this.description = description
 		this.function = func
 		this.parameters = parameters
 	}
@@ -60,12 +44,6 @@ class Result {
 	}
 }
 
-class Data {
-	constructor(note = '', data = {}) {
-		return new Result(note, data)
-	}
-}
-
 // class StreamMessageToolCall {
 // 	constructor({ id, function: func, type }) {
 // 		this.id = id
@@ -81,4 +59,4 @@ class Data {
 // 	}
 // }
 
-export { Agent, Tool, Response, Result, Data }
+export { BaseAgent, BaseTool, Response, Result }

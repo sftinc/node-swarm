@@ -9,12 +9,13 @@ const swarm = new Swarm()
 
 //Function to get the weather for today (current) or for the next 3 days (forecast)
 const getWeather = (type) => {
+	const addDays = (num) => new Date(new Date().setDate(new Date().getDate() + num)).toISOString().split('T')[0]
 	const fakeApi = {
-		current: { weather: 'sunny', temp: 70 },
+		current: { date: addDays(0), weather: 'sunny', temp: 70 },
 		forecast: [
-			{ weather: 'cloudy', temp: 60 },
-			{ weather: 'rainy', temp: 50 },
-			{ weather: 'sunny', temp: 75 },
+			{ date: addDays(1), weather: 'cloudy', temp: 60 },
+			{ date: addDays(2), weather: 'rainy', temp: 50 },
+			{ date: addDays(3), weather: 'sunny', temp: 75 },
 		],
 	}
 	return fakeApi[type]
@@ -38,7 +39,7 @@ const getWeatherTool = new Tool({
 // Orchestrator agent that will use the tool w/ current time as context
 const orchestrator = new Agent({
 	name: 'Orchestrator Agent',
-	instructions: `You are a helpful assistant. Today's date is ${new Date().toISOString()}.`,
+	instructions: `You are a helpful assistant. Today's date/time is ${new Date().toISOString()}.`,
 	tools: [getWeatherTool],
 })
 

@@ -7,20 +7,23 @@ dotenv.config()
 // Initialize Swarm
 const swarm = new Swarm()
 
+//Function to get the user information
+const getUser = (_data) => {
+	// return the user information to provide context to the agent
+	return _data.user
+}
+const getUserTool = new Tool({
+	title: 'Get User Information',
+	description: 'Used to get the current user information.',
+	function: getUser,
+})
+
 //Function to update the user information
 const updateUser = (name, age, _data) => {
 	const user = _data.user
 
 	user.name = name || user.name
 	user.age = age || user.age
-
-	console.log(
-		'updateUser',
-		new Data({
-			note: `User Updated: ${JSON.stringify(user)}`,
-			data: { user },
-		})
-	)
 
 	// Make sure to return the key and all data for that key
 	return new Data({
@@ -30,12 +33,12 @@ const updateUser = (name, age, _data) => {
 }
 const updateUserTool = new Tool({
 	title: 'Update User Information',
-	description: 'Use this tool when you need to update the user information.',
+	description: 'Used to update the current user information.',
 	function: updateUser,
 	parameters: {
 		name: {
 			type: 'string',
-			description: 'The name of the user',
+			description: 'The full name of the user',
 			optional: true,
 		},
 		age: {
@@ -52,18 +55,16 @@ const updateUserTool = new Tool({
 const orchestrator = new Agent({
 	name: 'Orchestrator Agent',
 	// Instructions can have access to data using the dataParam via a function
-	instructions: (_data) =>
-		`You are a helpful assistant. Personalize all responses.\n\nMy information is: ${JSON.stringify(
-			_data.user
-		)}.\n\nThe current date and time is: ${new Date().toISOString()}.`,
-	tools: [updateUserTool],
+	prompt: (_data) => `You are a helpful assistant. Personalize all responses.\n\nCurrent Date/Time:\n${_data.dateTime}`,
+	tools: [getUserTool, updateUserTool],
 })
 
 // User message
 const messages = [
 	{
 		role: 'user',
-		content: 'Change my name to Bob Smith.',
+		// content: 'What is my name?',
+		content: 'Change my last name to Smith.',
 	},
 ]
 
@@ -73,7 +74,7 @@ const data = {
 		name: 'John Doe',
 		age: 30,
 	},
-	other: 'some other data',
+	dateTime: new Date().toISOString(),
 }
 
 // Run Swarm with the orchestrator agent and the user message

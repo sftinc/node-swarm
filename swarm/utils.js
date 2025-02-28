@@ -69,7 +69,7 @@ const functionToJson = (func) => {
 const agentToJson = (agent) => ({
 	name: agent.name,
 	model: agent.model,
-	instructions: agent.instructions,
+	prompt: agent.prompt,
 	functions: agent.tools.map((fn) => fn.name),
 	toolChoice: agent.toolChoice,
 	parallelToolCalls: agent.parallelToolCalls,

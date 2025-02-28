@@ -1,21 +1,124 @@
 import { OpenAI } from 'openai'
-import { debugPrint, mergeChunk, agentToJson } from './utils.js'
-import { Agent, Response, Result } from './types.js'
+import { debugPrint, mergeChunk, functionToJson, agentToJson } from './utils.js'
+import { BaseAgent, BaseTool, Response, Result } from './types.js'
+
+class Agent extends BaseAgent {
+	constructor(config = {}) {
+		if (!(config instanceof Object)) {
+			throw new Error('When creating a new Agent, config must be an object')
+		}
+
+		const error = []
+
+		if (!config.name && typeof config.name !== 'string') {
+			throw new Error('Agent must have a name')
+		}
+
+		if ((!config.instructions && !config.prompt) || (config.instructions && config.prompt)) {
+			throw new Error('Agent must have either instructions {string} or prompt {string|function}')
+		}
+
+		if (config.instructions && typeof config.instructions !== 'string') {
+			throw new Error('Agent instructions must be a string')
+		}
+
+		if (config.prompt && typeof config.prompt !== 'string' && typeof config.prompt !== 'function') {
+			throw new Error('Agent prompt must be a string or function')
+		}
+
+		if (config.tools && !Array.isArray(config.tools)) {
+			throw new Error('Tools must be an array')
+		}
+
+		if (!config.tools) config.tools = []
+		config.tools = config.tools.map((tool) => {
+			if (tool instanceof BaseTool) return tool
+			return new Tool({ function: tool })
+		})
+
+		if (!config.prompt) {
+			config.prompt = `You are ${config.name} - your job: ${config.instructions}`
+
+			if (config.tools && config.tools.length) {
+				const toolList = config.tools
+					.map((tool) => tool.name + (tool.title && tool.title !== tool.name ? ` (${tool.title})` : '') + ': ' + tool.description)
+					.join('\n')
+				config.prompt += `\n\n**Tools:**\n${toolList}`
+			}
+		}
+
+		if (!config.toolChoice && typeof config.toolChoice !== 'string') config.toolChoice = 'auto'
+		if (!config.parallelToolCalls && typeof config.parallelToolCalls !== 'boolean') config.parallelToolCalls = false
+
+		super(config)
+	}
+}
+
+class Tool extends BaseTool {
+	constructor(config = {}) {
+		if (!(config instanceof Object)) {
+			throw new Error('When creating a new Tool, config must be an object')
+		}
+
+		if (!config.function || typeof config.function !== 'function') {
+			throw new Error('Tool must have a function (typeof "function")')
+		}
+
+		if (!config.function.name) {
+			throw new Error('Tool function must have a name: ' + config.function.toString().replace(/\s+/g, ' '))
+		}
+
+		const schema = functionToJson(config.function)
+		const schemaParameters = schema?.parameters || {}
+
+		config.title = config.title || config.function.name
+		if (!config.description) config.description = `Used to, ${config.title}`
+		if (!config.parameters) config.parameters = {}
+
+		for (const key in schemaParameters?.properties) {
+			schemaParameters.properties[key] = config.parameters[key]
+				? { ...schemaParameters.properties[key], ...config.parameters[key] }
+				: schemaParameters.properties[key]
+			if (schemaParameters.properties[key]?.optional)
+				schemaParameters.required = schemaParameters.required.filter((param) => param !== key)
+		}
+		config.parameters = schemaParameters
+
+		super(config)
+	}
+}
+
+class Data extends Result {
+	constructor(config = {}) {
+		if (!(config instanceof Object)) {
+			throw new Error('When creating a new Data, config must be an object')
+		}
+
+		if (!config.note && typeof config.note !== 'string') {
+			throw new Error('Data must pass note {string}')
+		}
+
+		if (!config.data && typeof config.data !== 'object') {
+			throw new Error('Data must pass data {object}')
+		}
+
+		super(config)
+	}
+}
 
 class Swarm {
 	constructor(args = {}) {
-		const { dataParam, ...settings } = args
+		const { model, dataParam, ...settings } = args
 
+		this.defaultModel = model || 'gpt-4o'
 		this.dataParam = dataParam || '_data'
 		this.client = new OpenAI({ ...settings })
-
-		console.log('Swarm', this.dataParam)
 	}
 
 	async getChatCompletion(agent, history, data, modelOverride, stream, debug) {
 		debugPrint(debug, '⬜ LLM Chat Completion')
-		const instructions = typeof agent.instructions === 'function' ? agent.instructions(data) : agent.instructions
-		const messages = [{ role: 'system', content: instructions }, ...history]
+		const prompt = typeof agent.prompt === 'function' ? agent.prompt(data) : agent.prompt
+		const messages = [{ role: 'system', content: prompt }, ...history]
 
 		const tools = agent.tools.map((tool) => {
 			const processedTool = JSON.parse(JSON.stringify(tool))
@@ -31,7 +134,7 @@ class Swarm {
 		})
 
 		const createParams = {
-			model: modelOverride || agent.model,
+			model: modelOverride || agent.model || this.defaultModel,
 			messages,
 			tools: tools.length ? tools : undefined,
 			tool_choice: tools.length ? agent.toolChoice : undefined,
@@ -51,9 +154,9 @@ class Swarm {
 		debugPrint(debug, `🟦 Process Tool Result for tool "${toolName}"`)
 
 		if (result instanceof Result) return result
-		if (result instanceof Agent) {
+		if (result instanceof BaseAgent) {
 			return new Result({
-				note: JSON.stringify({ assistant: result.name }),
+				note: `Transfer to agent => ${result.name}`,
 				agent: result,
 			})
 		}
@@ -213,4 +316,4 @@ class Swarm {
 	}
 }
 
-export default Swarm
+export { Agent, Tool, Data, Swarm }
