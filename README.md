@@ -133,10 +133,10 @@ Create a tool for agents to use:
 
 ```javascript
 const tool = new Tool({
-	title?: string, // Tool title
-	description?: string, // Tool description
-	function: Function, // Tool implementation
-	parameters?: Object // JSON Schema parameters
+	title: string, // Tool title
+	description: string, // Optional: Description of what the tool does
+	function: Function, // A function to call when a tool is used
+	(parameters): Object // Optional: JSON Schema parameters
 })
 ```
 
@@ -174,7 +174,7 @@ const data = {
 }
 
 const response = await swarm.run(agent, messages, data)
-console.log(response.data) // Access updated data
+console.dir(response.data, { depth: null, colors: true }) // Access updated data
 ```
 
 ### Swarm Run
