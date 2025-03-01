@@ -245,7 +245,7 @@ class Swarm {
 		return partialResponse
 	}
 
-	async run(agent, messages, data = {}, modelOverride = null, stream = false, debug = true, maxTurns = Infinity, executeTools = true) {
+	async run(agent, messages, data = {}, modelOverride = null, stream = false, debug = false, maxTurns = Infinity, executeTools = true) {
 		debugPrint(debug, '🟩 Starting swarm run')
 		if (stream) {
 			debugPrint(debug, '↪️ Delegating to runStream')
