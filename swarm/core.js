@@ -108,9 +108,10 @@ class Data extends Result {
 
 class Swarm {
 	constructor(args = {}) {
-		const { model, dataParam, ...settings } = args
+		const { model, maxTokens, dataParam, ...settings } = args
 
-		this.defaultModel = model || 'gpt-4o'
+		this.model = model || 'gpt-4o'
+		this.maxTokens = maxTokens || 5000
 		this.dataParam = dataParam || '_data'
 		this.client = new OpenAI({ ...settings })
 	}
@@ -134,8 +135,9 @@ class Swarm {
 		})
 
 		const createParams = {
-			model: modelOverride || agent.model || this.defaultModel,
+			model: modelOverride || agent.model || this.model,
 			messages,
+			max_tokens: this.maxTokens,
 			tools: tools.length ? tools : undefined,
 			tool_choice: tools.length ? agent.toolChoice : undefined,
 			stream,

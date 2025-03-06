@@ -103,11 +103,12 @@ The Swarm client accepts OpenAI configuration options:
 
 ```javascript
 const swarm = new Swarm({
-	(defaultModel): string, // Optional: Default model to use for Swarm Agents (default: 'gpt-4o')
-	(dataParam): string, // Optional: Custom data parameter name for Swarm Agents and Tools (default: '\_data')
 	(apiKey): string, // Optional: LLM API key (defaults: process.env.OPENAI_API_KEY)
 	(baseURL): string, // Optional: LLM API URL (defaults: OpenAI base URL)
-	(...LLMOptions): // Optional:Any other LLM client options
+	(model): string, // Optional: Default model to use for Swarm Agents (default: 'gpt-4o')
+	(maxTokens): integer // Optional: The max number of tokens to generate per response (default: 5000)
+	(dataParam): string, // Optional: Custom data parameter name for Swarm Agents and Tools (default: '\_data')
+	(...LLMOptions): // Optional: Any other LLM client options
 })
 ```
 
