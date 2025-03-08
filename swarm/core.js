@@ -247,11 +247,29 @@ class Swarm {
 		return partialResponse
 	}
 
-	async run(agent, messages, data = {}, modelOverride = null, stream = false, debug = false, maxTurns = Infinity, executeTools = true) {
+	async run(agent, messages, data = {}, settings = {}) {
+		if (typeof agent !== 'object') {
+			throw new Error('run: You must pass an created Agent')
+		}
+
+		if (!Array.isArray(messages)) {
+			throw new Error('run: Messages must be an array')
+		}
+
+		if (typeof data !== 'object') {
+			throw new Error('run: Data must be an object')
+		}
+
+		if (typeof settings !== 'object') {
+			throw new Error('run: Settings must be an object')
+		}
+
+		const { modelOverride = null, stream = false, debug = false, maxTurns = Infinity, executeTools = true } = settings
+
 		debugPrint(debug, '🟩 Starting swarm run')
 		if (stream) {
 			debugPrint(debug, '↪️ Delegating to runStream')
-			return this.runStream(agent, messages, data, modelOverride, debug, maxTurns, executeTools)
+			return this.runStream(agent, messages, data, settings)
 		}
 
 		let activeAgent = agent
@@ -280,7 +298,25 @@ class Swarm {
 		})
 	}
 
-	async *runStream(agent, messages, data = {}, modelOverride = null, debug = false, maxTurns = Infinity, executeTools = true) {
+	async *runStream(agent, messages, data = {}, settings = {}) {
+		if (typeof agent !== 'object') {
+			throw new Error('runStream: You must pass an created Agent')
+		}
+
+		if (!Array.isArray(messages)) {
+			throw new Error('runStream: Messages must be an array')
+		}
+
+		if (typeof data !== 'object') {
+			throw new Error('runStream: Data must be an object')
+		}
+
+		if (typeof settings !== 'object') {
+			throw new Error('runStream: Settings must be an object')
+		}
+
+		const { modelOverride = null, debug = false, maxTurns = Infinity, executeTools = true } = settings
+
 		debugPrint(debug, '🟩 Starting Swarm runStream')
 		let activeAgent = agent
 		const history = [...messages]

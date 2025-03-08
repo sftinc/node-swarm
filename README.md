@@ -182,20 +182,34 @@ console.dir(response.data, { depth: null, colors: true }) // Access updated data
 
 Run a conversation with an agent:
 
-```javascript
+````javascript
 const swarm = new Swarm()
 
-const response = await swarm.run({
-	agent: string // Agent instance
-	messages: array // Array of message objects
-	(data = {}): object // Optional: data context
-	(modelOverride = null): string // Optional: override all agents' model
-	(stream = false): boolean // Optional: stream responses
-	(debug = true): boolean // Optional: show debug logs
-	(maxTurns = Infinity): number // Optional: max conversation turns
-	(executeTools = true): boolean // Optional: execute tools
-})
-```
+const response = await swarm.run(
+    agent, // Agent instance
+    messages, // Array of message objects
+    data = {}, // Optional: data context
+    settings = {} // Optional: settings object
+)
+
+// Settings object can include:
+const settings = {
+    modelOverride: null, // Optional: override all agents' model
+    stream: false, // Optional: stream responses
+    debug: false, // Optional: show debug logs
+    maxTurns: Infinity, // Optional: max conversation turns
+    executeTools: true // Optional: execute tools
+}
+
+You can also use the stream version:
+```javascript
+const stream = await swarm.runStream(
+    agent,
+    messages,
+    data = {},
+    settings = {}
+)
+````
 
 ## Examples
 

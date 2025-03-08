@@ -1,6 +1,6 @@
 {
 	"name": "@sftinc/node-swarm",
-	"version": "0.1.7",
+	"version": "0.1.8",
 	"description": "A Node.js library for building AI agents using a OpenAI's Swarm framework.",
 	"author": "See Fusion Technologies, Inc.",
 	"license": "MIT",
