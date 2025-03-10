@@ -61,6 +61,7 @@ import { Swarm, Agent, Tool, Data } from '@sftinc/node-swarm'
 import dotenv from 'dotenv'
 dotenv.config()
 
+
 // Initialize Swarm with LLM settings
 const swarm = new Swarm({
 	apiKey: 'YOUR-LLM-API-KEY', // Optional: LLM API key (defaults: process.env.OPENAI_API_KEY)
@@ -182,7 +183,7 @@ console.dir(response.data, { depth: null, colors: true }) // Access updated data
 
 Run a conversation with an agent:
 
-````javascript
+```javascript
 const swarm = new Swarm()
 
 const response = await swarm.run(
@@ -200,6 +201,7 @@ const settings = {
     maxTurns: Infinity, // Optional: max conversation turns
     executeTools: true // Optional: execute tools
 }
+```
 
 You can also use the stream version:
 ```javascript
@@ -209,7 +211,7 @@ const stream = await swarm.runStream(
     data = {},
     settings = {}
 )
-````
+```
 
 ## Examples
 
